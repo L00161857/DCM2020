@@ -71,7 +71,7 @@ function Test-Network
      [Parameter()]
         [string[]]
         $ServerNames)
-        )
+        
 
     Begin
     {
