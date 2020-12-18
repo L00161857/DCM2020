@@ -70,7 +70,8 @@ function Test-Network
     Param(
      [Parameter()]
         [string[]]
-        $ServerNames)
+        $ServerNames
+        )
         
 
     Begin
