@@ -331,9 +331,10 @@ function Get-NetworkInfo
    
 .DESCRIPTION
    
-.PARAMETERS    
+.PARAMETERS
+    $ComputerName: A Valid Computer Name or IP Address
+    $PortList: list of available ports   
 #>
-
 # BSc DCM - fix this
 # fill in appropriate comments for the method as per the section above. this comment refers to the 
 # Get-OpenPorts function shown below.
