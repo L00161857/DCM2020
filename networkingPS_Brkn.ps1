@@ -41,10 +41,10 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
 
 .EXAMPLE
    Another example of how to use this cmdlet when using multiple servers
-   . .\NetworkTests.ps1
+   . .\networkingPS_Brkn.ps1
 
 .NOTES
-   Filename:     NetworkTests.ps1
+   Filename: networkingPS_Brkn.ps1
    Setting File: Settings.ini 
 #>
 
