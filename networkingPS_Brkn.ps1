@@ -89,7 +89,7 @@ function Network-Tests
     }    Process
     {    #BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
     #Which command should I use?
-    #  Write-Output $computerNames  
+    Write-Output $computerNames  
     #  Write-Host $computerNames
     # Uncomment the correct one of the above choices!
 
