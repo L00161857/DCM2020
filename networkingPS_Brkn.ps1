@@ -361,7 +361,7 @@ function Get-OpenPorts
         {
             
             #BSc DCM 2020 - Fix this
-            # $portConnected =
+            $portConnected = Test-NetConnection -ComputerName $ComputerName -Port $port -ErrorAction SilentlyContinue
             # finish the above line of code using the Test-NetConnection command and then uncomment.
             #check by port $port, and the computer name $ComputerName.
             # add an action of SilentlyContinue if a warning occurs
