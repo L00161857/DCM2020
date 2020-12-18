@@ -285,6 +285,9 @@ function Get-NetworkInfo
     Param(
         #BSC DCM students 2020 - fix this
         #a parameter should be added here for the string variable named ComputerName
+        [Parameter()]
+        [string]
+        $ComputerName
         )
 
     $networkInformationArray = @()
