@@ -50,9 +50,9 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
 
 
 Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $settings.Add($k[0], $k[1]) } }
-$computerNames = Get-Content $settings.Get_Item("IPAddressesFile")
+$ComputerNames = Get-Content $settings.Get_Item("IPAddressesFile")
 #Calling the Main function to carry out network tests
-Test-Network $computerNames
+Test-Network $ComputerNames
 
 #Region Test-Network
 <# 
@@ -76,7 +76,7 @@ function Test-Network
 
     Begin
     {
-    $computerNames = $ServerNames
+    $ComputerNames = $ServerNames
     # Creating objects to be used
     $serverArray = @()
     $errorOutputArray = @()
@@ -89,15 +89,15 @@ function Test-Network
     # Start to write to the Log File. All output will be written in the Log File
     Start-Transcript -Path $settings.Get_Item("LogFile")
     }Process
-    {#BSC DCM 2020, I need to send the list of $computerNames to the next part of the process (Foreach). 
+    {# BSC DCM 2020, I need to send the list of $ComputerNames to the next part of the process (Foreach). 
     #Which command should I use?
-    Write-Output $computerNames  
-    #  Write-Host $computerNames
+    Write-Output $ComputerNames  
+    # Write-Host $ComputerNames
     # Uncomment the correct one of the above choices!
 
 
     # Start Process
-    Foreach ($computerName in $computerNames)
+    Foreach ($computerName in $ComputerNames)
     {
         # Test the connection to the ComputerName or Ip Address Given
         if (Test-Connection -ComputerName $computerName -Count 1 -Quiet)
@@ -124,6 +124,8 @@ function Test-Network
     }
     End
     {
+    
+
     # Printing all the objects
     "*" * 50
     Write-Output "*   Servers Information"
