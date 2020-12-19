@@ -51,104 +51,6 @@ Networking Assignment (PowerShell) : Scripting the Deployment Pipeline
 
 Get-Content ".\Settings.ini" | foreach-object -begin {$Settings=@{}} -process { $k = [regex]::split($_,'='); if(($k[0].CompareTo("") -ne 0) -and ($k[0].StartsWith("[") -ne $True)) { $Settings.Add($k[0], $k[1]) } }
 $ComputerNames = Get-Content $Settings.Get_Item("IPAddressesFile")
-#Calling the Main function to carry out network tests
-Test-Network $ComputerNames
-
-#Region Test-Network
-<# 
-.Synopsis
-   Main Function doing network tests. 
-
-.DESCRIPTION
-   This function will call all the other functions to carry out network tests.
-
-.PARAMETERS
-   $ServerNames: Pass a list of server names as String Array
-#>
-function Test-Network
-{
-    Param(
-     [Parameter()]
-        [string[]]
-        $ServerNames
-        )
-        
-
-    Begin
-    {
-    $ComputerNames = $ServerNames
-    # Creating objects to be used
-    $ServerArray = @()
-    $ErrorOutputArray = @()
-    $NetworkInformationArray = @()
-    $CheckOpenPortsArray = @()
-
-    # Ports to check
-    $PortList = $Settings.PortsToValidate.Split(",") # Split the sitring into a an array
-
-    # Start to write to the Log File. All output will be written in the Log File
-    Start-Transcript -Path $Settings.Get_Item("LogFile")
-    }Process
-    {# BSC DCM 2020, I need to send the list of $ComputerNames to the next part of the process (Foreach). 
-    #Which command should I use?
-    Write-Output $ComputerNames  
-    # Write-Host $ComputerNames
-    # Uncomment the correct one of the above choices!
-
-
-    # Start Process
-    Foreach ($ComputerName in $ComputerNames)
-    {
-        # Test the connection to the ComputerName or Ip Address Given
-        if (Test-Connection -ComputerName $ComputerName -Count 1 -Quiet)
-        { 
-                # Get User Logged onto the server
-                $ServerArray += Get-UserDetail $ComputerName
-
-                # Check if any security errors or warning was log to the eventlog
-                $ErrorOutputArray += Get-WarningsErrors $ComputerName
-
-                # Get Network Information
-                $NetworkInformationArray += Get-NetworkInfo $ComputerName
-
-                # Check for open ports as per list given
-                $CheckOpenPortsArray += Get-OpenPorts $ComputerName $PortList
-      
-        } else {
-        $Server = [ordered]@{
-        ComputerName=$ComputerName
-        UserName="Remote Server Not Available"   }
-            $ServerArray += New-Object -TypeName PSObject -Property $Server
-        }
-    } # bottom of foreach loop
-    }
-    End
-    {
-    
-
-    # Printing all the objects
-    "*" * 50
-    Write-Output "*   Servers Information"
-    "*" * 50
-    $ServerArray | Format-Table -AutoSize
-
-    "*" * 50
-    Write-Output "*   EventLog - Errors and Warnings"
-    "*" * 50
-    $ErrorOutputArray | Format-Table -AutoSize
-    "*" * 50
-    Write-Output "*   Network Information"
-    "*" * 50
-    $NetworkInformationArray | Format-Table -AutoSize
-    "*" * 50
-    Write-Output "*   Open Ports"
-    "*" * 50
-    $CheckOpenPortsArray | Format-Table -AutoSize
-
-    Stop-Transcript
-    }
-}
-#endregion
 
 #Region Get-UserDetail
 <#
@@ -390,3 +292,102 @@ function Get-OpenPorts
 }
 #endregion
 
+#Region Test-Network
+<# 
+.Synopsis
+   Main Function doing network tests. 
+
+.DESCRIPTION
+   This function will call all the other functions to carry out network tests.
+
+.PARAMETERS
+   $ServerNames: Pass a list of server names as String Array
+#>
+function Test-Network
+{
+    Param(
+     [Parameter()]
+        [string[]]
+        $ServerNames
+        )
+        
+
+    Begin
+    {
+    $ComputerNames = $ServerNames
+    # Creating objects to be used
+    $ServerArray = @()
+    $ErrorOutputArray = @()
+    $NetworkInformationArray = @()
+    $CheckOpenPortsArray = @()
+
+    # Ports to check
+    $PortList = $Settings.PortsToValidate.Split(",") # Split the sitring into a an array
+
+    # Start to write to the Log File. All output will be written in the Log File
+    Start-Transcript -Path $Settings.Get_Item("LogFile")
+    }Process
+    {# BSC DCM 2020, I need to send the list of $ComputerNames to the next part of the process (Foreach). 
+    #Which command should I use?
+    Write-Output $ComputerNames  
+    # Write-Host $ComputerNames
+    # Uncomment the correct one of the above choices!
+
+
+    # Start Process
+    Foreach ($ComputerName in $ComputerNames)
+    {
+        # Test the connection to the ComputerName or Ip Address Given
+        if (Test-Connection -ComputerName $ComputerName -Count 1 -Quiet)
+        { 
+                # Get User Logged onto the server
+                $ServerArray += Get-UserDetail $ComputerName
+
+                # Check if any security errors or warning was log to the eventlog
+                $ErrorOutputArray += Get-WarningsErrors $ComputerName
+
+                # Get Network Information
+                $NetworkInformationArray += Get-NetworkInfo $ComputerName
+
+                # Check for open ports as per list given
+                $CheckOpenPortsArray += Get-OpenPorts $ComputerName $PortList
+      
+        } else {
+        $Server = [ordered]@{
+        ComputerName=$ComputerName
+        UserName="Remote Server Not Available"   }
+            $ServerArray += New-Object -TypeName PSObject -Property $Server
+        }
+    } # bottom of foreach loop
+    }
+    End
+    {
+    
+
+    # Printing all the objects
+    "*" * 50
+    Write-Output "*   Servers Information"
+    "*" * 50
+    $ServerArray | Format-Table -AutoSize
+
+    "*" * 50
+    Write-Output "*   EventLog - Errors and Warnings"
+    "*" * 50
+    $ErrorOutputArray | Format-Table -AutoSize
+    "*" * 50
+    Write-Output "*   Network Information"
+    "*" * 50
+    $NetworkInformationArray | Format-Table -AutoSize
+    "*" * 50
+    Write-Output "*   Open Ports"
+    "*" * 50
+    $CheckOpenPortsArray | Format-Table -AutoSize
+
+    Stop-Transcript
+    }
+}
+
+#endregion
+
+#Calling the Main function to carry out network tests
+Test-Network $ComputerNames
